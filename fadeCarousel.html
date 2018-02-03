@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"
+            integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+            crossorigin="anonymous">
+    </script>
+    <style>
+        ul,li{
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        a{
+            text-decoration: none;
+        }
+        .crousel{
+            position: relative;
+            width: 350px;
+            height: 250px;
+            overflow: hidden;
+
+        }
+        .ct-img{
+            position: absolute;
+        }
+        .clearfix:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        .ct-img>li img{
+            width: 350px;
+            height: 250px;
+            float: left;
+        }
+        .crousel .arrow{
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            z-index: 1;
+            text-align: center;
+            line-height: 30px;
+            color:#fff
+        }
+        .crousel .arrow:hover{
+            opacity: 0.7;
+        }
+        .crousel .pre{
+            left:10px;
+        }
+        .crousel .next{
+            right:10px;
+        }
+        .crousel .bullet{
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            z-index: 1;
+            text-align: center;
+            font-size: 0;
+        }
+        .crousel .bullet>li{
+            display: inline-block;
+            width: 50px;
+            height: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 3px;
+        }
+        .active{
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="crousel">
+    <ul class="ct-img clearfix">
+        <li data-id="0"><a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/1.jpg" alt=""></a></li>
+        <li data-id="1"><a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt=""></a></li>
+        <li data-id="2"><a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt=""></a></li>
+        <li data-id="3"><a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt=""></a></li>
+    </ul>
+    <a href="#" class="pre arrow"><</a>
+    <a href="#" class="next arrow">></a>
+    <ul class="bullet">
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+<script>
+
+    var $imgCt = $('.ct-img')
+    var $imgs = $imgCt.children()
+    var $preBtn = $('.crousel .pre')
+    var $nextBtn = $('.crousel .next')
+    var $bullets = $('.bullet li')
+
+    var clock
+    var pageIndex = 0
+    var isAnimate = false
+    var imgCount =$imgs.length
+
+    play(0)
+    auto()
+
+    $preBtn.on('click',function () {
+        playPre()
+        stop()
+    })
+    $nextBtn.on('click',function () {
+        playNext()
+        stop()
+    })
+    $bullets.on('click',function () {
+        play($(this).index())
+        stop()
+    })
+
+    function playNext() {
+        play((pageIndex + 1) % imgCount)
+    }
+
+    function playPre() {
+        play((imgCount + pageIndex - 1) % imgCount)
+    }
+
+    function play(idx) {
+        if (isAnimate) return
+        isAnimate = true
+        $imgs.eq(pageIndex).fadeOut(500)
+        $imgs.eq(idx).fadeIn(500, function () {
+            isAnimate = false
+        })
+        pageIndex = idx
+        setBullet()
+
+    }
+
+    function setBullet() {
+        $bullets.removeClass('active')
+            .eq(pageIndex)
+            .addClass('active')
+    }
+
+    function stop() {
+        clearInterval(clock)
+    }
+
+    function auto() {
+        clock = setInterval(function () {
+            playNext()
+        }, 2000)
+    }
+
+</script>
+</body>
+</html>
